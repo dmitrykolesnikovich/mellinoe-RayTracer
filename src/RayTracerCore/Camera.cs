@@ -11,6 +11,7 @@ using UnoptimizedVectors;
 using System.Numerics;
 #endif
 using System.Threading.Tasks;
+using System.Drawing.Imaging;
 
 namespace RayTracer
 {
@@ -108,7 +109,7 @@ namespace RayTracer
             }
 
             var before = DateTime.UtcNow;
-            Bitmap bitmap = new Bitmap(width, height);
+            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             List<Task> tasks = new List<Task>();
 
@@ -126,7 +127,6 @@ namespace RayTracer
                             var viewPortY = ((2 * y) / (float)height) - 1;
                             var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
                             colors[x, y] = color;
-                            //bitmap.SetPixel(x, height - y - 1, color);
                         }
                     });
 
@@ -136,13 +136,23 @@ namespace RayTracer
             await Task.WhenAll(tasks);
 
             // Copy all pixel data into bitmap.
-            for (int x = 0; x < width; x++)
+            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            unsafe
             {
-                for (int y = 0; y < height; y++)
+                Color32Argb* imageBase = (Color32Argb*)bitmapData.Scan0;
+                for (int x = 0; x < width; x++)
                 {
-                    bitmap.SetPixel(x, height - y - 1, colors[x, y]);
+                    for (int y = 0; y < height; y++)
+                    {
+                        Color32Argb color = new Color32Argb(colors[x, y]);
+                        int index = x + ((height - y - 1) * width);
+                        imageBase[index] = color;
+
+                        //bitmap.SetPixel(x, height - y - 1, colors[x, y]);
+                    }
                 }
             }
+            bitmap.UnlockBits(bitmapData);
 
             var after = DateTime.UtcNow;
             System.Diagnostics.Debug.WriteLine("Total render time: " + (after - before).TotalMilliseconds + " ms");

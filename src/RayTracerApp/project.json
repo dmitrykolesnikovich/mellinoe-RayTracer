@@ -23,9 +23,15 @@
         "System.Threading.Thread": "4.0.0-beta-*",
         "Microsoft.Win32.Primitives": "4.0.0-beta-*",
         "System.Numerics.Vectors": "4.0.0",
-        "System.Drawing": "4.0.0-beta*"
-    },
+        "System.Drawing": "4.0.0-beta*",
+        "Microsoft.NETCore.Runtime.ApiSets-x64": "1.0.0-beta-*",
+        "Microsoft.NETCore.Runtime.CoreCLR.TestHost-x64": "1.0.0-beta-*",
+        "Microsoft.NETCore.Runtime.CoreCLR-x64": "1.0.0-beta-*",
+  },
     "frameworks": {
-        "dnxcore50": {}
-  }
+        "dnxcore50": { }
+  },
+    "runtimes": {
+        "win7-x64": { }
+    }
 }

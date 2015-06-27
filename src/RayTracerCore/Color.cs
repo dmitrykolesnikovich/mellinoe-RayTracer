@@ -163,4 +163,26 @@ namespace RayTracer
             return (r << 16) | (g << 8) | (b << 0) | (a << 24);
         }
     }
+
+    public struct Color32Argb
+    {
+        public byte A, R, G, B;
+
+        public Color32Argb(byte a, byte r, byte g, byte b)
+        {
+            A = a;
+            R = r;
+            B = b;
+            G = g;
+        }
+
+        public Color32Argb(Color color)
+        {
+            color = color.Limited;
+            A = (byte)(255 * color.A);
+            R = (byte)(255 * color.R);
+            G = (byte)(255 * color.G);
+            B = (byte)(255 * color.B);
+        }
+    }
 }

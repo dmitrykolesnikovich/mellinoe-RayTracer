@@ -4,11 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>RayTracer.App</RootNamespace>
     <AssemblyName>RayTracer</AssemblyName>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SkipSigning>true</SkipSigning>
+    <PlatformTarget>x64</PlatformTarget>
     <ProjectGuid>{BBDB259D-C849-479B-8DAB-9E1394D4F84C}</ProjectGuid>
   </PropertyGroup>
   <!-- Default configurations to help VS understand the configurations -->
@@ -23,8 +24,10 @@
     <Reference Condition="'$(Configuration)' == 'Debug'" Include="$(RefsDir)\OpenTK\Debug\OpenTK.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OpenGLWindow.cs" />
+    <Compile Include="GLEx.cs" />
+    <Compile Include="RayTracerWindow.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="RenderTexture.cs" />
   </ItemGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))\dir.targets" />
 </Project>
