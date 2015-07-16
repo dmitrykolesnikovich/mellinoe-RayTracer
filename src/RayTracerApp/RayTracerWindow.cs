@@ -41,7 +41,7 @@ namespace RayTracer.App
             _nativeWindow.Resize += OnGameWindowResized;
             _nativeWindow.Closing += OnWindowClosing;
 
-            _scene = Scene.DefaultScene;
+            _scene = Scene.TwoPlanes;
 
             _renderTexture = new RenderTexture(_nativeWindow.Width, _nativeWindow.Height);
         }
@@ -62,8 +62,8 @@ namespace RayTracer.App
             // render graphics
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            Bitmap bitmap = _scene.Camera.RenderSceneToBitmapThreaded(_scene, _nativeWindow.Width, _nativeWindow.Height).Result;
-            _renderTexture.UpdateImage(bitmap);
+            _scene.Camera.RenderSceneToBitmapThreaded(_scene, _renderTexture.RenderBuffer, _nativeWindow.Width, _nativeWindow.Height);
+            _renderTexture.UpdateImage();
             _renderTexture.Render();
             _graphicsContext.SwapBuffers();
         }
@@ -81,6 +81,7 @@ namespace RayTracer.App
 
         private void OnGameWindowResized(object sender, EventArgs e)
         {
+            _renderTexture.Resize(_nativeWindow.Width, _nativeWindow.Height);
             SetViewport();
         }
 

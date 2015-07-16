@@ -12,6 +12,7 @@ using System.Numerics;
 #endif
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
+using RayTracerCore;
 
 namespace RayTracer
 {
@@ -96,7 +97,7 @@ namespace RayTracer
         /// </summary>
         /// <param name="scene">The scene to render</param>
         /// <returns>A bitmap of the rendered scene.</returns>
-        public async Task<Bitmap> RenderSceneToBitmapThreaded(Scene scene, int width = -1, int height = -1)
+        public void RenderSceneToBitmapThreaded(Scene scene, RenderBuffer renderBuffer, int width = -1, int height = -1)
         {
             if (width == -1 || height == -1)
             {
@@ -109,11 +110,8 @@ namespace RayTracer
             }
 
             var before = DateTime.UtcNow;
-            Bitmap bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             List<Task> tasks = new List<Task>();
-
-            Color[,] colors = new Color[width, height];
 
             for (int xCounter = 0; xCounter < width; xCounter++)
             {
@@ -126,161 +124,14 @@ namespace RayTracer
                             var viewPortX = ((2 * x) / (float)width) - 1;
                             var viewPortY = ((2 * y) / (float)height) - 1;
                             var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
-                            colors[x, y] = color;
+                            renderBuffer.SetColor(x, height - y - 1, ref color);
                         }
                     });
 
                 tasks.Add(task);
             }
 
-            await Task.WhenAll(tasks);
-
-            // Copy all pixel data into bitmap.
-            BitmapData bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            unsafe
-            {
-                Color32Argb* imageBase = (Color32Argb*)bitmapData.Scan0;
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++)
-                    {
-                        Color32Argb color = new Color32Argb(colors[x, y]);
-                        int index = x + ((height - y - 1) * width);
-                        imageBase[index] = color;
-
-                        //bitmap.SetPixel(x, height - y - 1, colors[x, y]);
-                    }
-                }
-            }
-            bitmap.UnlockBits(bitmapData);
-
-            var after = DateTime.UtcNow;
-            System.Diagnostics.Debug.WriteLine("Total render time: " + (after - before).TotalMilliseconds + " ms");
-            return bitmap;
-        }
-
-        /// <summary>
-        /// Renders the given scene in a background thread. Uses a single thread for rendering.
-        /// </summary>
-        /// <param name="scene">The scene to render</param>
-        /// <returns>A bitmap of the rendered scene.</returns>
-        public async Task<Bitmap> RenderSceneToBitmap(Scene scene, int width = -1, int height = -1)
-        {
-            if (width == -1 || height == -1)
-            {
-                width = renderSize.Width;
-                height = renderSize.Height;
-            }
-            else
-            {
-                renderSize = new Size(width, height);
-            }
-
-            var before = DateTime.UtcNow;
-
-            Bitmap bitmap = new Bitmap(width, height);
-
-            var task = Task.Run(() =>
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-                            var viewPortX = ((2 * x) / (float)width) - 1;
-                            var viewPortY = ((2 * y) / (float)height) - 1;
-                            var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
-                            bitmap.SetPixel(x, height - y - 1, color);
-                        }
-                    }
-                });
-
-            await task;
-
-            var after = DateTime.UtcNow;
-            System.Diagnostics.Debug.WriteLine("Total render time: " + (after - before).TotalMilliseconds + " ms");
-            return bitmap;
-        }
-
-        /// <summary>
-        /// Renders the given scene, providing a callback for each individual line rendered. Each line is rendered on a separate thread.
-        /// </summary>
-        /// <param name="width">The width of the rendered image</param>
-        /// <param name="width">The height of the rendered image</param>
-        /// <param name="scene">The scene to render</param>
-        /// <param name="callback">The delegate invoked when a thread completes rendering a line</param>
-        public void RenderSceneLinesThreaded(Scene scene, int width, int height, LineFinishedHandler callback)
-        {
-            if (width == -1 || height == -1)
-            {
-                width = renderSize.Width;
-                height = renderSize.Height;
-            }
-            else
-            {
-                renderSize = new Size(width, height);
-            }
-
-            var before = DateTime.UtcNow;
-            List<Task> tasks = new List<Task>();
-
-            for (int yCounter = height - 1; yCounter >= 0; yCounter--)
-            {
-                var y = yCounter;
-                Color[] colors = new Color[width];
-                Task.Run(() =>
-                {
-                    for (int xCounter = 0; xCounter < width; xCounter++)
-                    {
-                        var x = xCounter;
-                        var viewPortX = ((2 * x) / (float)width) - 1;
-                        var viewPortY = ((2 * y) / (float)height) - 1;
-                        var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
-                        colors[x] = color;
-                    }
-                    callback(y, colors);
-                });
-            }
-
-            var after = DateTime.UtcNow;
-            System.Diagnostics.Debug.WriteLine("Total render time: " + (after - before).TotalMilliseconds + " ms");
-        }
-
-        /// <summary>
-        /// Renders the given scene, providing a callback for each individual line rendered. Uses a single background thread.
-        /// </summary>
-        /// <param name="width">The width of the rendered image</param>
-        /// <param name="height">The height of the rendered image</param>
-        /// <param name="scene">The scene to render</param>
-        /// <param name="callback">The delegate invoked when a thread completes rendering a line</param>
-        public void RenderSceneLines(Scene scene, int width, int height, LineFinishedHandler callback)
-        {
-            if (width == -1 || height == -1)
-            {
-                width = renderSize.Width;
-                height = renderSize.Height;
-            }
-            else
-            {
-                renderSize = new Size(width, height);
-            }
-
-            var before = DateTime.UtcNow;
-
-            Task.Run(() => // Even single-threaded method should run in the background to avoid freezing UI.
-                {
-                    for (int y = height - 1; y >= 0; y--)
-                    {
-                        var colors = new Color[width];
-                        for (int x = 0; x < width; x++)
-                        {
-                            var viewPortX = ((2 * x) / (float)width) - 1;
-                            var viewPortY = ((2 * y) / (float)height) - 1;
-                            var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
-                            colors[x] = color;
-                        }
-                        callback(y, colors);
-                    }
-                });
+            Task.WhenAll(tasks).Wait();
             var after = DateTime.UtcNow;
             System.Diagnostics.Debug.WriteLine("Total render time: " + (after - before).TotalMilliseconds + " ms");
         }

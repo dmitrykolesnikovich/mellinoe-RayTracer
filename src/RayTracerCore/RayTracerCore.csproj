@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
-
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -11,12 +10,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>$(DefineConstants)</DefineConstants>
     <SkipSigning>true</SkipSigning>
+    <ProjectGuid>{64A9AEEF-3826-4AAC-A19B-4E423D555839}</ProjectGuid>
   </PropertyGroup>
-
   <!-- Default configurations to help VS understand the configurations -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
-
   <ItemGroup>
     <Compile Include="Color.cs" />
     <Compile Include="Intersection.cs" />
@@ -37,18 +35,16 @@
     <Compile Include="Objects\Sphere.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="RenderBuffer.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="project.json" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Condition="'$(Configuration)' == 'Release'" Include="$(RefsDir)\OpenTK\Release\OpenTK.dll" />
     <Reference Condition="'$(Configuration)' == 'Debug'" Include="$(RefsDir)\OpenTK\Debug\OpenTK.dll" />
   </ItemGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))\dir.targets" />
 </Project>

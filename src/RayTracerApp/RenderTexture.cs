@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL;
+using RayTracerCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,15 +13,20 @@ namespace RayTracer.App
 {
     public class RenderTexture
     {
+        private RenderBuffer _renderBuffer;
         private int _width;
         private int _height;
 
         private int _textureBufferId;
 
+        public RenderBuffer RenderBuffer
+        {
+            get { return _renderBuffer; }
+        }
+
         public RenderTexture(int width, int height)
         {
-            this._width = width;
-            this._height = height;
+            Resize(width, height);
 
             _textureBufferId = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _textureBufferId);
@@ -34,17 +40,19 @@ namespace RayTracer.App
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
         }
 
-        public void UpdateImage(Bitmap bitmap)
+        public void Resize(int width, int height)
         {
-            _width = bitmap.Width;
-            _height = bitmap.Height;
+            _width = width;
+            _height = height;
+            _renderBuffer = new RenderBuffer(width, height);
+        }
 
-            // Upload the Bitmap to OpenGL.
-            BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, _width, _height, 0,
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-
-            bitmap.UnlockBits(data);
+        public void UpdateImage()
+        {
+            unsafe
+            {
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, _width, _height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.Float, (IntPtr)_renderBuffer.BasePtr);
+            }
         }
 
         public void Render()
