@@ -42,17 +42,15 @@ namespace RayTracer.Objects
             }
             else
             {
-                this.uDirection = Util.CrossProduct(normalDirection, Util.ForwardVector).Normalized();
+                this.uDirection = Vector3.Normalize(Vector3.Cross(normalDirection, Util.ForwardVector));
             }
 
-            this.vDirection = -Util.CrossProduct(normalDirection, uDirection).Normalized();
+            this.vDirection = Vector3.Normalize(-Vector3.Cross(normalDirection, uDirection));
             this.cellWidth = cellWidth;
         }
 
         public override bool TryCalculateIntersection(Ray ray, out Intersection intersection)
         {
-            intersection = new Intersection();
-
             Vector3 vecDirection = ray.Direction;
             Vector3 rayToPlaneDirection = ray.Origin - this.Position;
 
@@ -61,24 +59,23 @@ namespace RayTracer.Objects
 
             if (Math.Abs(D) <= .0005f)
             {
+                intersection = new Intersection();
                 return false;
             }
 
             float sI = N / D;
             if (sI < 0 || sI > ray.Distance) // Behind or out of range
             {
+                intersection = new Intersection();
                 return false;
             }
 
-            var intersectionPoint = ray.Origin + (new Vector3(sI) * vecDirection);
+            var intersectionPoint = ray.Origin + (sI * vecDirection);
             var uv = this.GetUVCoordinate(intersectionPoint);
 
-            // u = (u + 1f) / 2f;
-            //v = (v + 1f) / 2f;
-            //Console.WriteLine(u + ", " + v);
             var color = Material.GetDiffuseColorAtCoordinates(uv);
 
-            intersection = new Intersection(intersectionPoint, this.normalDirection, ray.Direction, this, color, (ray.Origin - intersectionPoint).Magnitude());
+            intersection = new Intersection(intersectionPoint, this.normalDirection, ray.Direction, this, color, Vector3.Distance(ray.Origin, intersectionPoint));
             return true;
         }
 
@@ -87,7 +84,7 @@ namespace RayTracer.Objects
             var uvPosition = this.Position + position;
 
             var uMag = Vector3.Dot(uvPosition, uDirection);
-            var u = (new Vector3(uMag) * uDirection).Magnitude();
+            var u = (uMag * uDirection).Length();
             if (uMag < 0)
             {
                 u += cellWidth / 2f;
@@ -95,7 +92,7 @@ namespace RayTracer.Objects
             u = (u % cellWidth) / cellWidth;
 
             var vMag = Vector3.Dot(uvPosition, vDirection);
-            var v = (new Vector3(vMag) * vDirection).Magnitude();
+            var v = (vMag * vDirection).Length();
             if (vMag < 0)
             {
                 v += cellWidth / 2f;

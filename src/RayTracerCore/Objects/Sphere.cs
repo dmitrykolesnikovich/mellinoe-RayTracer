@@ -33,8 +33,6 @@ namespace RayTracer.Objects
         }
         public override bool TryCalculateIntersection(Ray ray, out Intersection intersection)
         {
-            intersection = new Intersection();
-
             Vector3 rayToSphere = ray.Origin - this.Position;
             float B = Vector3.Dot(rayToSphere, ray.Direction);
             float C = Vector3.Dot(rayToSphere, rayToSphere) - (Radius * Radius);
@@ -51,13 +49,14 @@ namespace RayTracer.Objects
             }
             else
             {
+                intersection = new Intersection();
                 return false;
             }
         }
 
         public override UVCoordinate GetUVCoordinate(Vector3 hitPosition)
         {
-            var toCenter = (hitPosition - this.Position).Normalized();
+            var toCenter = Vector3.Normalize(hitPosition - this.Position);
 
             float u = (float)(0.5 + ((Math.Atan2(toCenter.Z, toCenter.X)) / (2 * Math.PI)));
             float v = (float)(0.5 - (Math.Asin(toCenter.Y)) / Math.PI);

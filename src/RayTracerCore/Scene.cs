@@ -92,7 +92,7 @@ namespace RayTracer
                 var size = new System.Drawing.Size(1920, 1080);
                 scene.Camera = new Camera(new Vector3(0f, 2f, -2f), new Vector3(0, -.25f, 1f), Util.UpVector, 90f, size);
 
-                scene.DrawableObjects.Add(new Plane(new Vector3(0, -5f, 0), new CheckerboardMaterial(Color.White, Color.Grey, 1.0f, .1f, 0.0f, 2f), Util.UpVector, 10f));
+                scene.DrawableObjects.Add(new Plane(new Vector3(0, -5f, 0), new CheckerboardMaterial(Color.White, Color.DarkGrey, 1.0f, .1f, 0.0f, 2f), Util.UpVector, 10f));
                 scene.DrawableObjects.Add(new Plane(new Vector3(0, 12f, 0), new CheckerboardMaterial(Color.White, Color.Grey, 1.0f, .1f, 0.0f, 12f), -Util.UpVector, 7f));
 
                 scene.DrawableObjects.Add(new Sphere(new Vector3(-5, -2.5f, 8), new SolidMaterial(Color.Yellow, reflectivity: .2f), 2.0f));

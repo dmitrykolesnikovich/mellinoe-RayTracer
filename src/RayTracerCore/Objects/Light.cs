@@ -28,7 +28,6 @@ namespace RayTracer.Objects
             else
             {
                 var percentOfMax = (intensity - distance) / distance;
-                //var ret =(float)Math.Pow(percentOfMax, .35f);
 
                 var percent = 1 - (distance / intensity);
                 return percent;

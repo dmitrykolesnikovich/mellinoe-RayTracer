@@ -25,19 +25,12 @@ namespace RayTracer.Objects
 
         public override bool TryCalculateIntersection(Ray ray, out Intersection intersection)
         {
-            if (base.TryCalculateIntersection(ray, out intersection) && WithinArea(intersection.Point))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (base.TryCalculateIntersection(ray, out intersection) && WithinArea(intersection.Point));
         }
 
         private bool WithinArea(Vector3 location)
         {
-            var distanceFromCenter = (this.Position - location).Magnitude();
+            var distanceFromCenter = Vector3.Distance(this.Position, location);
             return distanceFromCenter <= radius;
         }
     }

@@ -23,7 +23,7 @@ namespace RayTracer.Objects
             this.points = pointsArray;
 
             var rightDirection = pointsArray[0] - pointsArray[1];
-            NormalDirection = Util.CrossProduct(Util.UpVector, rightDirection);
+            NormalDirection = Vector3.Cross(Util.UpVector, rightDirection);
         }
     }
 }

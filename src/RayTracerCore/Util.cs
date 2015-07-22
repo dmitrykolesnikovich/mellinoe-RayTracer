@@ -60,37 +60,23 @@ namespace RayTracer
         public static readonly Vector3 UpVector = new Vector3(0, 1, 0);
         public static readonly Vector3 ForwardVector = new Vector3(0, 0, 1);
 
-        public static Vector3 CrossProduct(Vector3 left, Vector3 right)
-        {
-            return new Vector3(
-                left.Y * right.Z - left.Z * right.Y,
-                left.Z * right.X - left.X * right.Z,
-                left.X * right.Y - left.Y * right.X);
-        }
-
         public static float Magnitude(this Vector3 v)
         {
-            return (float)Math.Abs(Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z));
+            return v.Length();
         }
 
         public static Vector3 Normalized(this Vector3 v)
         {
-            var mag = v.Magnitude();
-            if (mag != 1)
+            float lengthSquared = v.LengthSquared();
+            if (lengthSquared != 1)
             {
-                return new Vector3(v.X / mag, v.Y / mag, v.Z / mag);
+                return Vector3.Normalize(v);
             }
             else
             {
                 return v;
             }
         }
-
-        public static float Distance(Vector3 first, Vector3 second)
-        {
-            return (first - second).Magnitude();
-        }
-
 
         public static Vector3 Projection(Vector3 projectedVector, Vector3 directionVector)
         {

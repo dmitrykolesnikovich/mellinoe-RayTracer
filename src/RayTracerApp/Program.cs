@@ -9,7 +9,7 @@ namespace RayTracer.App
         {
             try
             {
-                using (RayTracerWindow window = new RayTracerWindow(640, 480, "Ray Tracer Demo"))
+                using (RayTracerWindow window = new RayTracerWindow(640, 480))
                 {
                     window.Show();
                 }

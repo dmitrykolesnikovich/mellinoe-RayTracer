@@ -13,7 +13,7 @@ namespace RayTracer.App
 {
     public class RenderTexture
     {
-        private RenderBuffer _renderBuffer;
+        private readonly RenderBuffer _renderBuffer;
         private int _width;
         private int _height;
 
@@ -26,7 +26,9 @@ namespace RayTracer.App
 
         public RenderTexture(int width, int height)
         {
-            Resize(width, height);
+            _width = width;
+            _height = height;
+            _renderBuffer = new RayTracerCore.RenderBuffer(width, height);
 
             _textureBufferId = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _textureBufferId);
@@ -44,7 +46,7 @@ namespace RayTracer.App
         {
             _width = width;
             _height = height;
-            _renderBuffer = new RenderBuffer(width, height);
+            _renderBuffer.Resize(width, height);
         }
 
         public void UpdateImage()

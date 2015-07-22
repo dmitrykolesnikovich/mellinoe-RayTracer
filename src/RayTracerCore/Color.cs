@@ -53,6 +53,7 @@ namespace RayTracer
         public static readonly Color Black = new Color(0, 0, 0, 1);
         public static readonly Color Yellow = new Color(1, 1, 0, 1);
         public static readonly Color Grey = new Color(.6f, .6f, .6f, 1);
+        public static readonly Color DarkGrey = new Color(.23f, .23f, .18f, 1);
         public static readonly Color Clear = new Color(1, 1, 1, 0);
         public static readonly Color Sky = new Color(102f / 255f, 152f / 255f, 1f, 1f);
         public static readonly Color Zero = new Color(0f, 0f, 0f, 0f);
@@ -140,12 +141,12 @@ namespace RayTracer
 
         public static Color operator +(Color left, Color right)
         {
-            return new Color(left.R + right.R, left.G + right.G, left.B + right.B, left.A + right.A);
+            return new Color(left.backingVector + right.backingVector);
         }
 
         public static Color operator -(Color left, Color right)
         {
-            return new Color(left.R - right.R, left.G - right.G, left.B - right.B, left.A - right.A);
+            return new Color(left.backingVector - right.backingVector);
         }
 
         /// <summary>

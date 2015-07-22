@@ -13,6 +13,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using RayTracerCore;
+using System.Threading;
 
 namespace RayTracer
 {
@@ -52,8 +53,8 @@ namespace RayTracer
             this.ReflectionDepth = 5;
             this.forward = forward.Normalized();
             //this.up = up;
-            this.right = Util.CrossProduct(worldUp, forward).Normalized();
-            this.up = -Util.CrossProduct(right, forward).Normalized();
+            this.right = Vector3.Normalize(Vector3.Cross(worldUp, forward));
+            this.up = Vector3.Normalize(-Vector3.Cross(right, forward));
             this.fieldOfView = fieldOfView;
             this.RenderSize = renderSize;
 
@@ -113,14 +114,14 @@ namespace RayTracer
 
             List<Task> tasks = new List<Task>();
 
-            for (int xCounter = 0; xCounter < width; xCounter++)
+            for (int yCounter = height - 1; yCounter >= 0; yCounter--)
             {
-                var x = xCounter;
+                var y = yCounter;
                 var task = Task.Run(() =>
                     {
-                        for (int yCounter = 0; yCounter < height; yCounter++)
+                        for (int xCounter = 0; xCounter < width; xCounter++)
                         {
-                            var y = yCounter;
+                            var x = xCounter;
                             var viewPortX = ((2 * x) / (float)width) - 1;
                             var viewPortY = ((2 * y) / (float)height) - 1;
                             var color = TraceRayAgainstScene(GetRay(viewPortX, viewPortY), scene);
@@ -164,7 +165,7 @@ namespace RayTracer
             {
                 var lightContribution = new Color();
                 var towardsLight = (light.Position - intersection.Point).Normalized();
-                var lightDistance = Util.Distance(intersection.Point, light.Position);
+                var lightDistance = Vector3.Distance(intersection.Point, light.Position);
 
                 // Accumulate diffuse lighting:
                 var lightEffectiveness = Vector3.Dot(towardsLight, intersection.Normal);
