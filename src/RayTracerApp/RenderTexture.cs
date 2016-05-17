@@ -1,13 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using RayTracerCore;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.App
 {
@@ -28,7 +22,7 @@ namespace RayTracer.App
         {
             _width = width;
             _height = height;
-            _renderBuffer = new RayTracerCore.RenderBuffer(width, height);
+            _renderBuffer = new RenderBuffer(width, height);
 
             _textureBufferId = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, _textureBufferId);

@@ -1,38 +1,21 @@
-﻿{
-    "dependencies": {
-        "System.AppContext": "4.0.0-beta-*",
-        "System.Collections": "4.0.10-beta-*",
-        "System.Collections.Immutable": "1.1.34-rc-00002",
-        "System.Console": "4.0.0-beta-*",
-        "System.Diagnostics.Debug": "4.0.10-beta-*",
-        "System.Globalization": "4.0.10-beta-*",
-        "System.IO": "4.0.10-beta-*",
-        "System.IO.FileSystem": "4.0.0-beta-*",
-        "System.IO.FileSystem.Primitives": "4.0.0-beta-*",
-        "System.Linq": "4.0.0-beta-*",
-        "System.Reflection": "4.0.10-beta-*",
-        "System.Reflection.Extensions": "4.0.0-beta-*",
-        "System.Reflection.Primitives": "4.0.0-beta-*",
-        "System.Reflection.TypeExtensions": "4.0.0-beta-*",
-        "System.Runtime": "4.0.20-beta-*",
-        "System.Runtime.Extensions": "4.0.10-beta-*",
-        "System.Runtime.Handles": "4.0.0-beta-*",
-        "System.Runtime.InteropServices": "4.0.20-beta-*",
-        "System.Text.Encoding": "4.0.10-beta-*",
-        "System.Threading": "4.0.10-beta-*",
-        "System.Threading.Tasks": "4.0.10-beta-*",
-        "System.Threading.Thread": "4.0.0-beta-*",
-        "Microsoft.Win32.Primitives": "4.0.0-beta-*",
-        "System.Numerics.Vectors": "4.0.0",
-        "System.Drawing": "4.0.0-beta*",
-        "Microsoft.NETCore.Runtime.ApiSets-x64": "1.0.0-beta-*",
-        "Microsoft.NETCore.Runtime.CoreCLR.TestHost-x64": "1.0.0-beta-*",
-        "Microsoft.NETCore.Runtime.CoreCLR-x64": "1.0.0-beta-*",
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "allowUnsafe": true,
+    "copyToOutput": { "include": "Materials/Textures/*.png" }
   },
-    "frameworks": {
-        "dnxcore50": { }
+  "dependencies": {
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.0-rc2-3002673"
+    },
+    "OpenTK.NETCore": "1.1.2287.6424",
+    "RayTracerCore": { "target": "project" }
   },
-    "runtimes": {
-        "win7-x64": { }
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50"
     }
+  }
 }

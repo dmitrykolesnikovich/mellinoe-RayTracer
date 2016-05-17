@@ -161,7 +161,7 @@ namespace RayTracer.App
 
         private void SetInitialStates()
         {
-            GL.ClearColor(System.Drawing.Color.CornflowerBlue);
+            GL.ClearColor(OpenTK.Color.CornflowerBlue);
         }
 
         private void SetViewport()

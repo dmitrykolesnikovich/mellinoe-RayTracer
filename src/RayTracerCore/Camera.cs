@@ -5,15 +5,9 @@ using RayTracer.Objects;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-#if SCALAR
-using UnoptimizedVectors;
-#else
 using System.Numerics;
-#endif
 using System.Threading.Tasks;
-using System.Drawing.Imaging;
 using RayTracerCore;
-using System.Threading;
 
 namespace RayTracer
 {

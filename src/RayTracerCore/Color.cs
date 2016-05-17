@@ -57,7 +57,7 @@ namespace RayTracer
         public static readonly Color Clear = new Color(1, 1, 1, 0);
         public static readonly Color Sky = new Color(102f / 255f, 152f / 255f, 1f, 1f);
         public static readonly Color Zero = new Color(0f, 0f, 0f, 0f);
-        public static readonly Color Silver = System.Drawing.Color.Silver;
+        public static readonly Color Silver = new Color(0.2f, 0.2f, 0.28f, 1f);
 
         public override string ToString()
         {
@@ -97,31 +97,6 @@ namespace RayTracer
         public static Color operator *(Color left, Color right)
         {
             return new Color(left.backingVector * right.backingVector);
-        }
-
-        public static implicit operator System.Drawing.Color(Color c)
-        {
-            var colorLimited = c.Limited;
-            try
-            {
-                return System.Drawing.Color.FromArgb((int)(255 * colorLimited.A), (int)(255 * colorLimited.R), (int)(255 * colorLimited.G), (int)(255 * colorLimited.B));
-            }
-            catch
-            {
-                return new System.Drawing.Color();
-            }
-        }
-
-        public static implicit operator Color(System.Drawing.Color c)
-        {
-            try
-            {
-                return new Color(c.R / 255f, c.G / 255f, c.B / 255f, c.A / 255f);
-            }
-            catch
-            {
-                return new Color();
-            }
         }
 
         /// <summary>
